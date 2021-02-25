@@ -1,10 +1,11 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Starred from './pages/Starred';
-import { Switch, Route } from 'react-router-dom';
+
 
 const App = () => {
-  return (
+ return (
       <Switch>
         <Route exact path="/">
           <Home/>
