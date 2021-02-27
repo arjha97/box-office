@@ -1,6 +1,11 @@
 import React, {useEffect, useReducer} from 'react';
 import { useParams } from 'react-router-dom';
+import Cast from '../components/show/Cast';
+import Details from '../components/show/Details';
+import Seasons from '../components/show/Seasons';
+import ShowMainData from '../components/show/ShowMainData';
 import { apiGet } from '../misc/config';
+import { InfoBlock, ShowPageWrapper } from './Show.styled';
 
 
 const reducer = (prevState, action) => {
@@ -36,9 +41,9 @@ const Show = () => {
 
     const { id } = useParams();
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [{ show, isLoading, error}, dispatch] = useReducer(reducer, initialState)
 
-    console.log('state', state);
+
 
     useEffect( () => {
 
@@ -67,12 +72,37 @@ const Show = () => {
         }
     }, [id]);
 
+  
+
+    if (isLoading) {
+      return <div>Data is being loaded</div>;
+    }
+  
+    if (error) {
+      return <div>Error occured: {error}</div>;
+    }
+
 
     return (
-        <div>
-          vuvkb
-        </div>
+        <ShowPageWrapper>
+          <ShowMainData image={show.image} name={show.name} rating={show.rating} summary={show.summary} tags={show.genres} />
+
+          <InfoBlock>
+              <h2>Details</h2>
+              <Details status={show.status} network={show.network} premiered={show.premiered}/>
+          </InfoBlock>
+
+          <InfoBlock>
+              <h2>Seasons</h2>
+              <Seasons seasons={show._embedded.seasons}/>
+          </InfoBlock>
+
+          <InfoBlock>
+              <h2>Cast</h2>
+              <Cast cast={show._embedded.cast}/>
+          </InfoBlock>
+        </ShowPageWrapper>
     )
 }
 
-export default Show
+export default Show;
